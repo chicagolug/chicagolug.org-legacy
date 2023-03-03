@@ -1,12 +1,14 @@
-import os
-import yaml
-import datetime
-import misaka as m
-from urlparse import urljoin
-from datetime import timedelta
-from werkzeug import secure_filename
-from werkzeug.contrib.atom import AtomFeed
+# https://icecreamcode.org/posts/python/markdown/
 from flask import Flask, render_template, Markup, abort, redirect, url_for, request
+import yaml
+import os
+import datetime
+import unicodedata
+import misaka as m
+from uritools import urijoin
+from datetime import timedelta
+from werkzeug.utils import secure_filename
+from feedwerk.atom import AtomFeed
 
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
@@ -17,7 +19,7 @@ def get_page(directory, file):
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), directory, filename))
     try:
         file_contents = open(path).read()
-        file_contents = unicode(file_contents, 'utf-8')
+        file_contents = unicodedata(file_contents, 'utf-8')
     except:
         return None
     data, text = file_contents.split('---\n', 1)
@@ -36,7 +38,7 @@ def get_meeting(path):
 def get_meetings():
     """Return a list of all meetings"""
     files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), app.config['MEETINGS_DIR'])))
-    meetings = filter(lambda meeting: meeting is not None, [get_meeting(file) for file in files])
+    meetings = [meeting for meeting in [get_meeting(file) for file in files] if meeting is not None]
     return sorted(meetings, key=lambda item: item['datetime'])
 
 def past_meetings():
@@ -59,7 +61,7 @@ def get_location(path):
 def get_locations():
     """Return a list of all locations"""
     files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), app.config['LOCATIONS_DIR'])))
-    locations = filter(lambda location: location is not None, [get_location(file) for file in files])
+    locations = [location for location in [get_location(file) for file in files] if location is not None]
     return (locations)
 
 def all_locations():
@@ -112,9 +114,9 @@ def feed():
         date = meeting['datetime'] - timedelta(weeks=1)
         feed.add(
             meeting['title'],
-            unicode(meeting['content']),
+            str(meeting['content']),
             author=meeting['speaker'],
-            url=urljoin(request.url_root, url_for('meeting', date=meeting['path'])),
+            url=urijoin(request.url_root, url_for('meeting', date=meeting['path'])),
             updated=date,
             published=date
         )

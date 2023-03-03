@@ -1,11 +1,10 @@
 from setuptools import setup
 setup(name='chicagolugflask',
       version='1.0',
-      description='ChicagoLUG website on OpenShift',
+      description='ChicagoLUG website',
       author='Jim Campbell',
       author_email='jwcampbell@gmail.com',
-      url='http://www.python.org/sigs/distutils-sig/',
-      install_requires=['flask>=0.9', 'markdown>=2.1.1', 'pyyaml>=3.10',
-      'gunicorn>=0.14.2'],
+      install_requires=['flask>=2.2.3', 'misaka>=2.1.1', 'pyyaml>=6.0',
+      'gunicorn>=20.1.0','feedwork>=1.1.0','uritools>=4.0.1','werkzeug>=2.2.3',
+      'setuptools>=59.6.0'],
      )
-

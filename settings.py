@@ -1,4 +1,4 @@
 # Configuration
-MEETINGS_DIR = 'meetings'
-PAGES_DIR = 'pages'
-LOCATIONS_DIR = 'locations'
+MEETINGS_DIR = 'content/meetings'
+PAGES_DIR = 'content'
+LOCATIONS_DIR = 'content/locations'
